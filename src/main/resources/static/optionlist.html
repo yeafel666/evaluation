@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选项列表，仅针对指定指标</title>
+    <link rel="stylesheet" href="./layui/css/layui.css" media="all">
+</head>
+<body>
+
+<blockquote class="layui-elem-quote quoteBox">
+    <form class="layui-form">
+
+        <div class="layui-inline">
+            <a class="layui-btn layui-btn-normal addNews_btn">添加选项</a>
+        </div>
+
+    </form>
+</blockquote>
+
+<table id="optionList" lay-filter="optionTable" ></table>
+
+<script type="text/html" id="optionListBar">
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+
+<script src="./layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+
+<script type="text/javascript" charset="utf-8">
+    layui.use(
+        [ "table", "jquery" ],
+        function() {
+            var table = layui.table, $ = layui.$;
+
+
+
+
+
+
+            var Ohref=window.location.href;
+            var arrhref=Ohref.split("?indexId=");
+            // alert(arrhref[1]);
+            var indexId = arrhref[1];
+
+
+
+
+            var tableIns = table.render({
+                elem : '#optionList',
+                cols : [ [ {
+                    type : 'checkbox'
+                },{
+                    field : "description",
+                    title : "选项内容",
+                },{
+                    field : "optionScore",
+                    title : "选项分值",
+                    align : "center",
+                    sort: true
+                },{
+                    title : "操作",
+                    width : 170,
+                    fixed : "right",
+                    align : "center",
+                    toolbar : "#optionListBar"
+                }
+                ] ],
+                url : "http://localhost:8080/evaluation/option/listNotPage?indexId="+ indexId,
+
+                cellMinWidth : 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                page : false,
+                limits : [ 3, 5, 10 ],
+            });
+
+
+
+
+            //添加新功能
+            function addNews(location) {
+                var index = layui.layer.open({
+                    title: "功能",
+                    type: 2,
+                    anim:3  ,
+                    maxmin:true,
+                    content: location,
+                    end: function () {
+                        tableIns.reload({
+                            page : {
+                                curr : 1
+                                //重新从第 1 页开始
+                            },
+
+                        })
+                    },
+                    success: function (layero, index) {
+                        layui.layer.getChildFrame('body', index);
+                        setTimeout(function () {
+                            layui.layer.tips('点击此处返回客户列表', '.layui-layer-setwin .layui-layer-close ', {
+                                tips: 3
+                            });
+                        }, 500)
+                    },
+
+                })
+                layui.layer.full(index);
+
+            }
+
+
+            $(".addNews_btn").click(function () {
+                var location = "optionedit.html";
+                addNews(location);
+            });
+
+            //监听工具条
+            table.on('tool(optionTable)', function(obj) {//注：tool是工具条事件名，demo是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data;//获得当前行数据
+                if (obj.event === 'detail') {//获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    layer.alert(JSON.stringify(data));
+                } else if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', {
+                        icon : 3,
+                        title : '提示信息'
+                    }, function(index) {
+                        obj.del();//删除对应行（tr）的DOM结构，并更新缓存
+                        //向服务端发送删除指令
+                        $.post("http://localhost:8080/evaluation/option/delete", {
+                            id : data.optionId
+                            //将需要删除的newsId作为参数传入
+                        }, function(data) {
+                            tableIns.reload();
+                            layer.close(index);
+                        })
+                    });
+                } else if (obj.event === 'edit') {
+                    var location = "optionedit.html?optionId="+ data.optionId;
+                    addNews(location);
+                }
+            });
+
+
+        });
+</script>
+</body>
+</html>

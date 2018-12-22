@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeafel.evaluation.dataobject.mapper.UserMapper">
+
+    <resultMap id="findForlayUI" type="com.yeafel.evaluation.dataobject.User">
+        <id column="user_id" property="userId" jdbcType="INTEGER"></id>
+        <id column="user_no" property="userNo" jdbcType="VARCHAR"></id>
+        <id column="password" property="password" jdbcType="VARCHAR"></id>
+        <id column="username" property="username" jdbcType="VARCHAR"></id>
+        <id column="department_no" property="departmentNo" jdbcType="VARCHAR"></id>
+        <id column="clazz_no" property="clazzNo" jdbcType="VARCHAR"></id>
+        <id column="identity" property="identity" jdbcType="VARCHAR"></id>
+    </resultMap>
+
+    <select id="findUsersIfUsernameIsNotNull" resultMap="findForlayUI" parameterType="java.lang.String">
+
+        select * from user	where 1>0
+        <if test="username != null and username !=''  ">
+             and username like "%"#{username,jdbcType=VARCHAR}"%"
+        </if>
+    </select>
+
+</mapper>

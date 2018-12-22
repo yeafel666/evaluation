@@ -1,0 +1,140 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+ul,li,ol{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+}
+body{
+    text-align: center;
+    margin: 0;
+}
+
+.clear{
+    clear: both;
+    line-height: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
+}
+.content{
+    background: url("../img/BG.jpg");
+    background-size: cover;
+    height: 1650px;
+}
+.p1{
+    padding-top: 100px;
+    font-family: Tahoma;
+    font-size: 40px;
+}
+.p2{
+    font-family: sun;
+    font-size: 20px;
+    margin-left: -320px;
+}
+.Chooseall{
+    line-height: 50px;
+    font-family: monospace;
+    font-size: 25px;
+}
+.btn01{
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    padding: 20px;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn01 span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+ }
+
+.btn01 span:after {
+    content: '?';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn01:hover span {
+    padding-right: 25px;
+}
+
+.btn01:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+/* 按钮二 */
+.btn02{
+    margin-top: 20px;
+    margin-left: 50px;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    padding: 20px;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+.btn02 span{
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.btn02 span:after {
+    margin-left: 5px;
+    content:'>>';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn02:hover span {
+    padding-right: 25px;
+}
+
+.btn02:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+/*  文本框 */
+#textit{
+    margin-top: 20px;
+    width: 500px;
+    height: 200px;
+    background: none transparent scroll repeat 0% 0%;
+    transition: 0.8s;
+}
+#textit:hover{
+    background: white;
+}
+/*  单选框样式美化  */
+label {font-size:20px;cursor:pointer;font-family: Sim;padding-left:10px; }
+label i {font-size:15px;font-style:normal;display:inline-block;width:12px;height:12px;text-align:center;line-height:12px;color:#fff;vertical-align:middle;margin:-2px 2px 1px 0px;border:#2489c5 1px solid;}
+input[type="radio"] {display:none;}
+input[type="radio"] + i {border-radius:7px;}
+i,input[type="radio"]:checked + i {background:none transparent scroll repeat 0% 0%;}
+i,input[type="radio"]:checked:disabled + i {background:#ccc;}

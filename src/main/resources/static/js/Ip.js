@@ -1,0 +1,4 @@
+(function() {
+	 IP = 'http://localhost';
+	 
+})();

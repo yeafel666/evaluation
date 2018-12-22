@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>试卷</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+</head>
+<body>
+<form  class="layui-form layui-form-pane"  id="testPaper">
+
+</form>
+<script src="layui/layui.js"></script>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+<script type="text/javascript">
+    layui.use(["form", "layer", "jquery"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+
+         function parseUrl(){
+             var url=location.href;
+             var i=url.indexOf('?');
+             if(i==-1)return;
+             var querystr=url.substr(i+1);
+             var arr1=querystr.split('&');
+             var arr2=new Object();
+             for  (i in arr1){
+                 var ta=arr1[i].split('=');
+                 arr2[ta[0]]=ta[1];
+             }
+             return arr2;
+         }
+         var v = parseUrl();//解析所有参数
+         // alert(v['teacherId']);//就是你要的结果
+         // alert(v['courseId']);//就是你要的结果
+        var teacherId = v['teacherId'];
+        var courseId = v['courseId'];
+
+
+
+        var number;  /*题的数量*/
+        (function(){
+
+                $.ajax({
+                    url:"http://localhost:8080/evaluation/tree/getLeafNode",
+                    type:"get",
+                    data:{},
+                    dataType:"json",
+                    success:function(data){
+                        var nodeList = data.data;
+                        var radioName = 0;
+
+
+                        $("#testPaper").html("");//清空内容
+                        $.each(nodeList, function(i, item) {
+
+                            var weight = item.weight;
+                            $("#testPaper").append(
+                               /* "<div  class=\"layui-form-item\">" + item.weight + "</div>" +
+                                "<div>" + item.name    + "</div>" +
+                                "<div>" + item.id + "</div><hr/>");*/
+                               "<input name=\"number\" type=\"hidden\">"+
+                               "<input name=\"teacherId\" type=\"hidden\">"+
+                               "<input name=\"courseId\" type=\"hidden\">"+
+
+                                "<div  class=\"layui-form-item\">"+
+                                    "<label class=\"layui-form-label\">"+ "题目："+ "</label>"+
+                                    "<div class=\"layui-input-block\">"+
+                                    "<input name=\"name\" lay-verify=\"required\"  autocomplete=\"off\"\n" +
+                                            "class=\"layui-input\" type=\"text\"  value='"+ item.name+"' disabled  style='color: #0C0C0C;font-family: 华文行楷;font-size: 30px'>" +
+                                    "</div>"+
+                                "</div>"
+                            )
+
+
+                            var optionList =  item.optionList;
+
+                            radioName = radioName+1;
+                            number = radioName;
+                            $.each(optionList,function (i, item) {
+
+                                  $("#testPaper").append(
+                                   "<div class=\"layui-form-item\">"+
+                                     // "<label class=\"layui-form-label\">" + "选项" + "</label>"+
+                                     "<div class=\"layui-input-block\">"+
+                                      "<input name='"+radioName+"'  value='"+item.optionScore*weight+"'  type=\"radio\">"+ item.description +
+                                      "</div>"+
+                                   "</div>"
+                                )
+                            })
+                            form.render()
+                            ;
+                        });
+
+                        $("input[name='number']").val(number);
+                        $("input[name='teacherId']").val(teacherId);
+                        $("input[name='courseId']").val(courseId);
+
+                        $("#testPaper").append(
+                            "<div class=\"layui-form-item\">"+
+                                "<button class=\"layui-btn\" lay-submit=\"\" lay-filter=\"form1\" >"+"提交"+"</button>"+
+                            "</div>"
+
+                        )
+
+                    },
+                    error:function(xmlHttpRequest,textStatus,errorThrown){
+                        alert(textStatus+"出错！"+errorThrown);
+                    }
+                });
+
+        })();
+
+
+        /*监听所有的radio*/
+        // form.on('radio', function(data){
+        //     console.log(data.elem); //得到radio原始DOM对象
+        //     console.log(data.value); //被点击的radio的value值
+        //
+        // });
+
+
+
+        form.on("submit(form1)", function (data) {
+            console.log(data.field);
+            console.log(Object.keys(data.field).length - 4);
+
+                // console.log($("input[name= '"+i+"']").checked);
+                if (Object.keys(data.field).length - 4 == number ){
+                }
+                else {
+                    layer.msg("有题没做完噢！",{icon: 5,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                    return false;
+                }
+
+
+            $.post("http://localhost:8080/evaluation/evaluate/submit", data.field,function(d){
+                if (d.code === 15 || d.code === 16){
+                    layer.msg("很抱歉！试卷提交失败。",{icon: 5,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                }else if (d.code === 0) {
+                    layer.msg("恭喜您！试卷提交成功。",{icon: 6,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                        layer.msg("您本次所评分数为: "+d.data,{icon: 6},function(){
+                            window.location.href = "evaluatinglist.html";
+                        });
+                    });
+                }
+            },"json");
+
+
+
+
+            return false;
+        });
+
+
+
+    });
+</script>
+</body>
+</html>

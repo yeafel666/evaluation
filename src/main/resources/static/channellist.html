@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评教通道的控制</title>
+    <link rel="stylesheet" href="./layui/css/layui.css" media="all">
+
+</head>
+<body>
+<blockquote class="layui-elem-quote quoteBox">
+    <span>通道控制</span>
+</blockquote>
+
+<table id="channelControlList" lay-filter="channelControlTable"></table>
+
+<script type="text/html" id="channelControlListBar">
+
+
+
+    {{#  if(d.channelState == 0){ }}
+    <a  class="layui-btn layui-btn-xs layui-btn-normal" lay-event="switch">开启通道</a>
+    {{#  } else if(d.channelState == 1){ }}
+    <a  class="layui-btn layui-btn-xs layui-btn-danger" lay-event="switch">关闭通道</a>
+    {{#  } }}
+</script>
+
+
+
+<script src="./layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+
+<script type="text/javascript" charset="utf-8">
+    layui.use(
+        [ "table", "jquery" ],
+        function() {
+            var table = layui.table, $ = layui.$;
+
+            var tableIns = table.render({
+                elem : '#channelControlList',
+                cols : [ [
+                    {
+                    field : "channelControlId",
+                    title : "ID",
+                    align : "center",
+                      },
+                    {
+                        field : "semesterName",
+                        title : "学期",
+                        align : "center",
+                    },{
+                        field : "channelState",
+                        title : "通道状态",
+                        templet:function(d){
+                            if(d.channelState=='0'){
+                                return "未开启";
+                            }else if(d.channelState=='1'){
+                                return "已开启";
+                            }else{
+                                return d.channelState;
+                            }
+                        },
+                        align : "center",
+                    },{
+                        title : "操作",
+                        fixed : "right",
+                        align : "center",
+                        toolbar : "#channelControlListBar"
+                    } ] ],
+                url : 'http://localhost:8080/evaluation/channelControl/list',
+                cellMinWidth : 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                page : true,
+                limits : [ 3, 5, 10 ],
+
+
+
+          /*      done: function(res, curr, count){
+                    //如果是异步请求数据方式，res即为你接口返回的信息。
+                    //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                    console.log(res);
+
+                    //得到当前页码
+                    console.log(curr);
+
+                    //得到数据总量
+                    console.log(count);
+                }*/
+
+            });
+
+
+
+
+            //监听工具条
+            table.on('tool(channelControlTable)', function(obj) {//注：tool是工具条事件名，demo是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data;//获得当前行数据
+                if (obj.event === 'switch') {//获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+                    // layer.alert(JSON.stringify(data));
+                    layer.confirm('请确认', {
+                        icon : 3,
+                        title : '提示信息'
+                    }, function(index) {
+                        //向服务端发送切换指令
+                        $.post("http://localhost:8080/evaluation/channelControl/change", {
+                            channelControlId : data.channelControlId
+                            //将需要删除的newsId作为参数传入
+                        }, function(data) {
+                            tableIns.reload();
+                            layer.close(index);
+                        })
+                    });
+                }
+            });
+
+
+        });
+</script>
+
+
+</body>
+</html>

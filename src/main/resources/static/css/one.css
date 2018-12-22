@@ -1,0 +1,107 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+ul,li,ol{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+}
+body{
+    margin: 0;
+}
+.clear{
+    clear: both;
+    line-height: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
+}
+.all-head{
+    height: 200px;
+}
+/*  logo部分描述  */
+.logo{
+    width: 600px;
+    height: 120px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.all-body{
+    text-align: center;
+}
+.all-body-1{
+    margin-top: 20px;
+    font-size: 60px;
+    font-family: monospace, monospace;
+}
+.pick{
+    margin-top: 200px;
+}
+.btn{
+    width: 100px;
+    height: 50px;
+    transition: 1s;
+}
+.btn:hover{
+    background-color: #d58512;
+}
+#login{
+    width: 800px;
+    height: 600px;
+}
+.modal{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 200px;
+}
+.modal-header{
+    font-family: cursive;
+    font-size: 20px;
+}
+.modal-body{
+    padding-top: 35px;
+    margin:0 auto;
+    font-size: 14px;
+    font-family: fantasy;
+    height: 250px;
+}
+.btn01{
+    margin-left: 20px;
+    width: 400px;
+    height: 40px;
+}
+.btn02{
+    line-height: 5px;
+    width: 150px;
+    height: 40px;
+    transition: 1s;
+    margin-left: 80px;
+    margin-top: 8px;
+}
+.btn03{
+    margin-top: 8px;
+    line-height: 5px;
+    margin-left: 130px;
+    width: 150px;
+    height: 40px;
+}
+.btn02:hover{
+    background-color: #c7254e;
+}
+.select-one{
+    width: 450px;
+    height: 40px;
+}
+/********************************************************背景部分*********************************************/
+
+canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: black;
+    z-index: -1;
+}
+
+

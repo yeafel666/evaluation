@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录页面</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="bootstrap/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/jquery.backstretch.min.js"></script>
+    <link rel="stylesheet" href="css/one.css">
+    <script type="text/javascript" src="js/one.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-select.css">
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/jquery-1.11.1.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+<body>
+<canvas class="bcsees"></canvas>
+<!-- 大整体 -->
+<div class="all">
+    <!--上体部分开始-->
+    <div class="all-head">
+        <!--logo开始-->
+        <div class="logo">
+            <img src="img/top_logo.png">
+        </div>
+        <!--logo结束-->
+        <!--<hr style="width: 80%;margin-left:10%;color: #ac2925;" size="5px">-->
+    </div>
+    <!--上体部分结束-->
+    <!--下体部分开始-->
+    <div class="all-body">
+        <div class="all-body-1" style="color: white">
+            欢迎来到重庆工程学院教师评测系统
+        </div>
+        <!--按钮部分开始-->
+        <div class="pick">
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="login" style="background-color:#35414F ">登陆</button>
+        </div>
+        <!--按钮部分结束-->
+    </div>
+    <!--下体部分结束-->
+</div>
+<!-- 大整体 -->
+<!--弹出框开始-->
+<div class="modal fade" id="login" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><p style="text-align: center;">欢迎来到重工评测系统</p></div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="userNo" class="col-sm-2 control-label">工 号：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="userNo" placeholder="请输入您的用户名" style="width: 450px">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">密  码：</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="password" placeholder="请输入您的密码" style="width: 450px">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleId" class="col-sm-2 control-label">角色选择:</label>
+                        <div class="col-sm-10" >
+                            <select id="roleId" class="select-one" title="请选择以何种角色登录" >
+                                <option value="0">学生</option>
+                                <option value="1">教师</option>
+                                <option value="2">教研室人员</option>
+                                <option value="3">系部人员</option>
+                                <option value="4">管理员</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="loginButton" class="btn02 btn-primary btn-lg">登陆</button>
+                        <button type="reset" class="btn03 btn-primary btn-lg">重置</button>
+                    </div>
+                </form>
+            </div>
+    </div>
+</div>
+</div>
+<!--弹出框结束-->
+
+<script src="./layui/layui.js"></script>
+<script type="text/javascript">
+        // $(document).ready(function(){
+        layui.use(['layer',"jquery"], function(){
+            var layer = layui.layer,
+                $ = layui.jquery;
+
+            $("#loginButton").click(function(){
+                    $.ajax({
+                        url:"http://localhost:8080/evaluation/user/login",
+                        type:"get",
+                        data:{
+                            userNo:$("#userNo").val(),
+                            password:$("#password").val(),
+                            roleId:$("#roleId").val()
+                        },
+                        dataType:"json",
+                        success:function(data){
+                                if (data.code == 0){
+                                    window.location.href ="main.html";
+                                }else {
+                                    layer.alert(data.msg+"， 请重新登录",{
+                                        icon: 5,
+                                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                    },function () {
+                                        layer.close(layer.index);
+                                    });
+                                    // layer.alert(data.msg+"， 请重新登录", {icon: 1});
+                                }
+
+
+                        },
+                        error:function(xmlHttpRequest,textStatus,errorThrown){
+                            alert(textStatus+"出错！"+errorThrown);
+                        }
+                    });
+                });
+
+
+
+
+        });
+</script>
+</body>
+</html>

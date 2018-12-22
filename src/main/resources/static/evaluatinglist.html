@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正在评教中的记录列表</title>
+    <link rel="stylesheet" href="./layui/css/layui.css" media="all">
+
+</head>
+<body>
+<blockquote class="layui-elem-quote quoteBox">
+    <form class="layui-form">
+        <span style=" font-size: 30px;font-family: 华文行楷;" >评教中心</span>
+    </form>
+</blockquote>
+
+<table id="evaluatingList" lay-filter="evaluatingTable"></table>
+
+<script type="text/html" id="evaluatingListBar">
+    {{#  if(d.isMatch == 0){ }}
+    <a  class="layui-btn layui-btn-xs layui-btn-fluid  layui-btn-disabled" lay-event="" disabled="">教师不匹配</a>
+    {{#  } }}
+
+    {{#  if(d.isOpen == 1 && d.isMatch != 0){ }}
+    <a  class="layui-btn layui-btn-xs layui-btn-normal" lay-event="switch">开始评教</a>
+    {{#  } else if(d.isOpen == 0 && d.isMatch != 0){ }}
+    <a  class="layui-btn layui-btn-xs layui-btn-disabled" lay-event="">抱歉,未开启通道</a>
+    {{#  } }}
+
+
+
+</script>
+
+
+
+<script src="./layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+
+<script type="text/javascript" charset="utf-8">
+    layui.use(
+        [ "table", "jquery" ],
+        function() {
+            var table = layui.table, $ = layui.$;
+
+
+            var tableIns = table.render({
+                elem : '#evaluatingList',
+                cols : [ [ {
+                    type : 'checkbox'
+                },
+                    {
+                        field : "teacherNo",
+                        title : "教师编号",
+                        align : "center",
+                        sort:true
+                    }, {
+                        field : "teacherName",
+                        title : "教师姓名",
+                        align : "center",
+                    },{
+                        field : "clazzNo",
+                        title : "班级编号",
+                        align : "center",
+                        sort:true
+                    },{
+                        field : "courseName",
+                        title : "课程名",
+                        align : "center",
+                    },{
+                        field : "departmentName",
+                        title : "院系",
+                        align : "center",
+                    },{
+                        field : "semesterName",
+                        title : "学期",
+                        align : "center",
+                    },{
+                        title : "操作",
+                        fixed : "right",
+                        align : "center",
+                        toolbar : "#evaluatingListBar"
+                    } ] ],
+                url : 'http://localhost:8080/evaluation/lecture/list',
+                cellMinWidth : 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                page : true,
+                limits : [ 3, 5, 10 ],
+            });
+
+
+
+
+
+
+
+            //监听工具条
+            table.on('tool(evaluatingTable)', function(obj) {//注：tool是工具条事件名，demo是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data;//获得当前行数据
+                if (obj.event === 'switch') {//获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    // window.location.href = "testpaperlist.html";
+                    // window.location.href = "testpaperlist.html?teacherId="+ data.teacherId;
+                    window.location.href = 'testpaperlist.html?teacherId=' + data.teacherId + '&courseId=' + data.courseId;
+                }
+            });
+
+
+        });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教师查询自己的成绩</title>
+    <link rel="stylesheet" href="./layui/css/layui.css" media="all">
+</head>
+<body>
+
+<table id="gradeList" lay-filter="gradeTable"></table>
+
+
+<script src="./layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+
+<script type="text/javascript" charset="utf-8">
+    layui.use([ "table", "jquery" ], function() {
+        var table = layui.table,
+            $ = layui.$;
+
+        var tableIns = table.render({
+            elem : '#gradeList',
+            cols : [ [ {
+                type : 'checkbox'
+            }, {
+                field : "teacherName",
+                title : "教师姓名",
+                align : "center",
+            }, {
+                field : "courseName",
+                title : "课程名",
+                align : "center"
+            }, {
+                field : "studentScore",
+                title : "学生方面(平均分)",
+                align : "center",
+                sort: true
+            }, {
+                field : "teacherScore",
+                title : "老师方面(平均分)",
+                align : "center",
+                sort: true
+            },{
+                field : "researchScore",
+                title : "教研室方面(平均分)",
+                align : "center",
+                sort: true
+            },{
+                field : "departmentScore",
+                title : "系部方面(平均分)",
+                align : "center",
+                sort: true
+            },{
+                field : "totalScore",
+                title : "总分数(平均分)",
+                align : "center",
+                sort: true
+            }, ] ],
+            url : 'http://localhost:8080/evaluation/grade/personal',
+            cellMinWidth : 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            page : true,
+            limits : [ 3, 5, 10 ],
+        });
+
+
+
+
+
+    });
+</script>
+</body>
+</html>

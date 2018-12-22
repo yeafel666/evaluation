@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tree-table</title>
+    <link rel="stylesheet" href="assets/layui/css/layui.css">
+    <link rel="stylesheet" href="assets/common.css"/>
+</head>
+<body>
+<div class="layui-container layui-text">
+    <br>
+    <h1>
+        教师综合评价系统---
+        <small>指标管理</small>
+    </h1>
+    <br>
+    <div class="layui-btn-group">
+        <button class="layui-btn" id="btn-expand">全部展开</button>
+        <button class="layui-btn" id="btn-fold">全部折叠</button>
+        <button class="layui-btn" id="btn-refresh">刷新表格</button>
+    </div>
+    <a class="layui-btn layui-btn-normal addNews_btn">添加指标</a>
+    &nbsp;
+
+    <input id="edt-search" type="text" placeholder="输入关键字" style="width: 120px;"/>&nbsp;&nbsp;
+    <button class="layui-btn" id="btn-search">&nbsp;&nbsp;搜索&nbsp;&nbsp;</button>
+    &emsp;
+    <!--<a class="layui-btn layui-btn-primary" href="https://whvse.gitee.io/treetable/" target="_blank">BOM树形表格</a>-->
+
+    <table id="table1" class="layui-table" lay-filter="table1"></table>
+</div>
+<!-- 操作列 -->
+<script type="text/html" id="oper-col">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="option">选项</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script src="assets/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: 'module/'
+    }).extend({
+        treetable: 'treetable-lay/treetable'
+    }).use(['layer', 'table', 'treetable'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var layer = layui.layer;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        var renderTable = function () {
+            layer.load(2);
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'indexId',
+                treePidName: 'parentId',
+                treeDefaultClose: true,
+                treeLinkage: false,
+                elem: '#table1',
+                url: 'http://localhost:8080/evaluation/index/listNotPage',
+                page: false,
+                cols: [[
+                    {type: 'numbers'},
+                    {field: 'indexId',width:110, title: 'id'},
+                    {field: 'indexName', title: '指标名'},
+                    {field: 'parentId', title: '父结点'},
+                    {field: 'weight', title: '权重'},
+                    {field: 'isEffective', title: '是否生效',templet:function(d){
+                            if(d.isEffective=='0'){
+                                return "不生效";
+                            }else if(d.isEffective=='1'){
+                                return "生效";
+                            }else{
+                                return d.identity;
+                            }
+                        }},
+                    {field: 'createTime', title: '创建时间'},
+                    {field: 'updateTime', title: '更新时间'},
+                    {templet: '#oper-col', width:160,title: '操作'}
+                ]],
+                done: function () {
+                    layer.closeAll('loading');
+                }
+            });
+        };
+
+        renderTable();
+
+        $('#btn-expand').click(function () {
+            treetable.expandAll('#table1');
+        });
+
+        $('#btn-fold').click(function () {
+            treetable.foldAll('#table1');
+        });
+
+        $('#btn-refresh').click(function () {
+            renderTable();
+        });
+
+        $('#btn-search').click(function () {
+            var keyword = $('#edt-search').val();
+            var searchCount = 0;
+            $('#table1').next('.treeTable').find('.layui-table-body tbody tr td').each(function () {
+                $(this).css('background-color', 'transparent');
+                var text = $(this).text();
+                if (keyword != '' && text.indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        treetable.expandAll('#table1');
+                        $('html,body').stop(true);
+                        $('html,body').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (keyword == '') {
+                layer.msg("请输入搜索内容", {icon: 5});
+            } else if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            }
+        });
+
+
+
+        $(".addNews_btn").click(function () {
+            var location = "indexedit.html";
+            addNews(location);
+        });
+
+        //监听工具条
+        table.on('tool(table1)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'del') {
+                layer.msg('删除' + data.id);
+                layer.confirm('真的删除行么', {
+                    icon : 3,
+                    title : '提示信息'
+                }, function(index) {
+                    obj.del();//删除对应行（tr）的DOM结构，并更新缓存
+                    //向服务端发送删除指令
+                    $.post("http://localhost:8080/evaluation/index/delete", {
+                        id : data.id
+                        //将需要删除的newsId作为参数传入
+                    }, function(data) {
+                        renderTable();
+                        layer.close(index);
+                    })
+                });
+            } else if (layEvent === 'edit') {
+                layer.msg('修改' + data.id);
+                var location ="indexedit.html?indexId="+ data.indexId;
+                addNews(location);
+            }else if (layEvent === 'option') {
+                layer.open({
+                    type: 2,
+                    anim: 1,
+                    area: ['900px', '500px'],
+                    title: '在线调试',
+                    content: "optionlist.html?indexId="+ data.indexId,
+                    end: function () {
+                        // renderTable();
+                    },
+                });
+            }
+        });
+
+
+        function addNews(location) {
+            var index = layui.layer.open({
+                title: "指标",
+                type: 2,
+                anim:3  ,
+                maxmin:true,
+                content: location,
+                end: function () {
+                    renderTable();
+                },
+                success: function (layero, index) {
+                    layui.layer.getChildFrame('body', index);
+                    setTimeout(function () {
+                        layui.layer.tips('点击此处返回客户列表', '.layui-layer-setwin .layui-layer-close ', {
+                            tips: 3
+                        });
+                    }, 500)
+                },
+
+            })
+            layui.layer.full(index);
+
+        }
+    });
+</script>
+</body>
+</html>

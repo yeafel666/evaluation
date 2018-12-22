@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加/修改功能</title>
+</head>
+
+<link rel="stylesheet" href="layui/css/layui.css" media="all">
+
+<body>
+
+<fieldset class="layui-elem-field layui-field-title"
+          style="margin-top: 50px;">
+    <legend>功能编辑</legend>
+</fieldset>
+<form  class="layui-form layui-form-pane" >
+    <input type="hidden" name="actionId"  >
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功能名称</label>
+        <div class="layui-input-block">
+            <input name="actionName" lay-verify="required"  autocomplete="off" placeholder="请输入功能名称"
+                   class="layui-input" type="text" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功能地址</label>
+        <div class="layui-input-inline">
+            <input name="url" lay-verify="required" placeholder="请输入功能地址"
+                   autocomplete="off" class="layui-input" type="text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">父结点</label>
+        <div class="layui-input-inline">
+            <input name="parentId" lay-verify="required" placeholder="请输入父结点"
+                   autocomplete="off" class="layui-input" type="text">
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item">
+        <button class="layui-btn" lay-submit="" lay-filter="form1" >提交</button>
+    </div>
+
+</form>
+
+<script src="layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+<script type="text/javascript">
+    layui.use(["form", "layer", "jquery"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+
+        /* function parseUrl(){
+             var url=location.href;
+             var i=url.indexOf('?');
+             if(i==-1)return;
+             var querystr=url.substr(i+1);
+             var arr1=querystr.split('&');
+             var arr2=new Object();
+             for  (i in arr1){
+                 var ta=arr1[i].split('=');
+                 arr2[ta[0]]=ta[1];
+             }
+             return arr2;
+         }
+         var v = parseUrl();//解析所有参数
+         // alert(v['userId']);//就是你要的结果
+         var */
+
+        var Ohref=window.location.href;
+        var arrhref=Ohref.split("?actionId=");
+        // alert(arrhref[1]);
+        var actionId = arrhref[1];
+
+
+
+        (function(){
+            if (actionId !== undefined) {         //判断我是点的添加还是编辑
+                /*此处是在编辑的时候根据userId在后台查询用户的全部信息并数据回显*/
+                $.ajax({
+                    url:"http://localhost:8080/evaluation/action/findByActionId",
+                    type:"get",
+                    data:{actionId:actionId},
+                    dataType:"json",
+                    success:function(data){
+                        var action = data.data;
+
+                        // $("#userInfo").text(username + "    " + userNo);
+                        // window.location.href ="login.html";
+                        $("input[name='actionId']").val(action.actionId);
+                        $("input[name='actionName']").val(action.actionName);
+                        $("input[name='parentId']").val(action.parentId);
+                        $("input[name='url']").val(action.url);
+
+                    },
+                    error:function(xmlHttpRequest,textStatus,errorThrown){
+                        alert(textStatus+"出错！"+errorThrown);
+                    }
+                });
+            }
+        })();
+
+
+
+
+
+
+
+        form.on("submit(form1)", function (data) {
+            /* layer.alert(($("#userId").val()==null || $("#userId").val()=='') ? "添加成功!" : "修改成功!", {icon: 1}); */
+            $.post("http://localhost:8080/evaluation/action/save", data.field,function(d){
+                if (d.code === 15 || d.code === 16){
+                    layer.msg("很抱歉！操作失败了。",{icon: 5,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                }else if (d.code === 0) {
+                    layer.msg("恭喜您！操作成功了。",{icon: 6,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                }
+            },"json");
+
+
+
+
+            return false;
+        });
+
+
+
+    });
+</script>
+</body>
+</html>

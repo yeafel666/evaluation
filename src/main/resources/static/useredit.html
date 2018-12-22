@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加/修改用户</title>
+</head>
+
+<link rel="stylesheet" href="layui/css/layui.css" media="all">
+
+<body>
+
+<fieldset class="layui-elem-field layui-field-title"
+          style="margin-top: 50px;">
+    <legend>用户编辑</legend>
+</fieldset>
+<form  class="layui-form layui-form-pane" >
+
+    <input type="hidden" name="userId"  >
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户编号</label>
+        <div class="layui-input-block">
+            <input name="userNo" lay-verify="required"  autocomplete="off" placeholder="请输入用户编号"
+                   class="layui-input" type="text" >
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户密码</label>
+        <div class="layui-input-inline">
+            <input name="password" lay-verify="required" placeholder="请输入密码"
+                   autocomplete="off" class="layui-input" type="text">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户姓名</label>
+        <div class="layui-input-inline">
+            <input name="username" lay-verify="required" placeholder="请输入姓名"
+                   autocomplete="off" class="layui-input" type="text">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">院系编号</label>
+            <div class="layui-input-block">
+                <input name="departmentNo" lay-verify="required" placeholder="请选择院系名称" class="layui-input" type="text"  autocomplete="off"  id="departmentNo">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">班级编号</label>
+            <div class="layui-input-block">
+                <input name="clazzNo" lay-verify="required" placeholder="请输入班级编号" class="layui-input" type="text"  autocomplete="off"  id="clazzNo">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">身份</label>
+        <div class="layui-input-block">
+            <select name="identity"   id="select">
+                <option value ="0"   >学生</option>
+                <option value ="1"   >老师</option>
+                <option value="2"    >院系主任</option>
+                <option value="3"   >教研室主任</option>
+                <option value="4"   >管理员</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="layui-form-item">
+        <button class="layui-btn" lay-submit="" lay-filter="form1" >提交</button>
+    </div>
+
+</form>
+
+<script src="layui/layui.js"></script>
+<script src="layui/layui.all.js"></script>
+<script src="layui/lay/modules/tableSelect.js"></script>
+
+<script type="text/javascript">
+
+    var tableSelect = layui.tableSelect;
+
+    /** 监听部门编号input框 */
+    tableSelect.render({
+        elem: '#departmentNo',
+        searchKey: 'departmentName',	//搜索输入框的name值 默认keyword
+        searchPlaceholder: '院系名搜索',	//搜索输入框的提示文字 默认关键词搜索
+        table: {
+            url:'http://localhost:8080/evaluation/department/list',
+            cols: [[
+                { type: 'radio' },
+                { field: 'departmentId', title: 'ID' },
+                { field: 'departmentNo', title: '院系编号' },
+                { field: 'departmentName', title: '院系名' }
+            ]],
+            cellMinWidth : 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            height: 150,
+            page : true,
+            limits : [ 3, 5, 10 ],
+        },
+        done: function (elem, data) {
+            var NEWJSON = []
+            layui.each(data.data, function (index, item) {
+                NEWJSON.push(item.departmentNo)
+            })
+            elem.val(NEWJSON.join(","))
+        }
+    });
+
+
+
+    /** 监听部门编号input框 */
+    tableSelect.render({
+        elem: '#clazzNo',
+        searchKey: 'clazzName',	//搜索输入框的name值 默认keyword
+        searchPlaceholder: '班级名搜索',	//搜索输入框的提示文字 默认关键词搜索
+        table: {
+            url:'http://localhost:8080/evaluation/clazz/list',
+            cellMinWidth : 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            height : 130,
+            page : true,
+            limits : [ 3, 5, 10 ],
+            cols: [[
+                { type: 'radio' },
+                { field: 'clazzId', title: 'ID' },
+                { field: 'clazzName', title: '班级名' },
+                { field: 'clazzNo', title: '班级编号' }
+            ]]
+        },
+        done: function (elem, data) {
+            var NEWJSON = []
+            layui.each(data.data, function (index, item) {
+                NEWJSON.push(item.clazzNo)
+            })
+            elem.val(NEWJSON.join(","))
+        }
+    });
+</script>
+
+<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+<script type="text/javascript">
+
+    layui.use(["form", "layer", "jquery"], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+
+
+
+
+
+       /* function parseUrl(){
+            var url=location.href;
+            var i=url.indexOf('?');
+            if(i==-1)return;
+            var querystr=url.substr(i+1);
+            var arr1=querystr.split('&');
+            var arr2=new Object();
+            for  (i in arr1){
+                var ta=arr1[i].split('=');
+                arr2[ta[0]]=ta[1];
+            }
+            return arr2;
+        }
+        var v = parseUrl();//解析所有参数
+        // alert(v['userId']);//就是你要的结果
+        var */
+
+        var Ohref=window.location.href;
+        var arrhref=Ohref.split("?userId=");
+        // alert(arrhref[1]);
+        var userId = arrhref[1];
+
+
+
+        (function(){
+            if (userId !== undefined) {         //判断我是点的添加还是编辑
+                /*此处是在编辑的时候根据userId在后台查询用户的全部信息并数据回显*/
+                $.ajax({
+                    url:"http://localhost:8080/evaluation/user/findByUserId",
+                    type:"get",
+                    data:{userId:userId},
+                    dataType:"json",
+                    success:function(data){
+                        var user = data.data;
+
+                        // $("#userInfo").text(username + "    " + userNo);
+                        // window.location.href ="login.html";
+                        $("input[name='userId']").val(user.userId);
+                        $("input[name='userNo']").val(user.userNo);
+                        $("input[name='password']").val(user.password);
+                        $("input[name='username']").val(user.username);
+                        $("input[name='departmentNo']").val(user.departmentNo);
+                        $("input[name='clazzNo']").val(user.clazzNo);
+                    },
+                    error:function(xmlHttpRequest,textStatus,errorThrown){
+                        alert(textStatus+"出错！"+errorThrown);
+                    }
+                });
+            }
+        })();
+
+
+
+
+
+
+
+        form.on("submit(form1)", function (data) {
+            /* layer.alert(($("#userId").val()==null || $("#userId").val()=='') ? "添加成功!" : "修改成功!", {icon: 1}); */
+            $.post("http://localhost:8080/evaluation/user/save", data.field,function(d){
+                if (d.code === 15 || d.code === 16){
+                    layer.msg("很抱歉！操作失败了。",{icon: 5,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                }else if (d.code === 0) {
+                    layer.msg("恭喜您！操作成功了。",{icon: 6,time: 1500},function(){
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                    });
+                }
+            },"json");
+
+
+            // alert('添加用户成功！');
+
+
+            return false;
+        });
+
+
+
+    });
+</script>
+</body>
+</html>
