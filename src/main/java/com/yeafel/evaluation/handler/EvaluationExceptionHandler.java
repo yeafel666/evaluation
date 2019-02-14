@@ -1,6 +1,6 @@
 package com.yeafel.evaluation.handler;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.exception.EvaluationException;
 import com.yeafel.evaluation.utils.ResultVOUtil;
 import org.springframework.web.bind.annotation.ControllerAdvice;

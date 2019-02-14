@@ -1,6 +1,6 @@
 package com.yeafel.evaluation.controller;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.dataobject.Department;
 import com.yeafel.evaluation.dataobject.User;
 import com.yeafel.evaluation.dto.UserDTO;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Null;
 import java.io.UnsupportedEncodingException;

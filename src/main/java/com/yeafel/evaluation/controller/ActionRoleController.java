@@ -1,6 +1,6 @@
 package com.yeafel.evaluation.controller;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.dataobject.ActionRole;
 import com.yeafel.evaluation.dataobject.Role;
 import com.yeafel.evaluation.dto.ActionRoleDTO;

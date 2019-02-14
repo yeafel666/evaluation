@@ -1,4 +1,4 @@
-package com.yeafel.evaluation.VO;
+package com.yeafel.evaluation.vo;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.yeafel.evaluation.controller;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.dataobject.Role;
 import com.yeafel.evaluation.enums.ResultEnum;
 import com.yeafel.evaluation.exception.EvaluationException;

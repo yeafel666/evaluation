@@ -1,6 +1,6 @@
 package com.yeafel.evaluation.utils;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 
 /**
  * Created by kangyifan on 2018/9/17 11:53

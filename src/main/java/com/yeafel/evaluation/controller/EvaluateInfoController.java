@@ -1,15 +1,12 @@
 package com.yeafel.evaluation.controller;
 
-import com.yeafel.evaluation.VO.ResultVO;
-import com.yeafel.evaluation.dataobject.EvaluateInfo;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.dto.EvaluateInfoDTO;
 import com.yeafel.evaluation.dto.UserDTO;
-import com.yeafel.evaluation.repository.EvaluateInfoRepository;
 import com.yeafel.evaluation.service.EvaluateInfoService;
 import com.yeafel.evaluation.service.RoleService;
 import com.yeafel.evaluation.utils.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

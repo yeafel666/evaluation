@@ -1,8 +1,7 @@
 package com.yeafel.evaluation.controller;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.dataobject.EvaluateInfo;
-import com.yeafel.evaluation.dataobject.Grade;
 import com.yeafel.evaluation.dto.EvaluateInfoDTO;
 import com.yeafel.evaluation.dto.GradeDTO;
 import com.yeafel.evaluation.dto.LectureDTO;

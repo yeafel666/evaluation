@@ -1,9 +1,8 @@
 package com.yeafel.evaluation.controller;
 
-import com.yeafel.evaluation.VO.ResultVO;
+import com.yeafel.evaluation.vo.ResultVO;
 import com.yeafel.evaluation.dataobject.Department;
 import com.yeafel.evaluation.dataobject.Lecture;
-import com.yeafel.evaluation.dataobject.User;
 import com.yeafel.evaluation.dto.ChannelControlDTO;
 import com.yeafel.evaluation.dto.LectureDTO;
 import com.yeafel.evaluation.dto.UserDTO;
@@ -24,8 +23,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Null;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
