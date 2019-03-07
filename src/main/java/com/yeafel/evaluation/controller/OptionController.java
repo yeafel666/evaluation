@@ -35,7 +35,7 @@ public class OptionController {
     @GetMapping("/listNotPage")
     public ResultVO<List<Option>> list(Option option) {
 
-        Integer count = optionService.countRoleForPage(option.getIndexId());
+        Integer count = optionService.countOptionsForPage(option.getIndexId());
 
         PageRequest request = PageRequest.of(0,9999);       //为了不分页查出所有数据。
         Page<Option> optionPage  = optionService.findOptionsByIndexId(option.getIndexId(),request);

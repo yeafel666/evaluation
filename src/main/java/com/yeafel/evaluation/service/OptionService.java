@@ -20,7 +20,7 @@ public interface OptionService {
     Page<Option> findOptionsByIndexId(Long indexId, Pageable pageable);
 
 
-    Integer countRoleForPage(Long indexId);
+    Integer countOptionsForPage(Long indexId);
 
     Option findOptionByOptionId(Long optionId);
 

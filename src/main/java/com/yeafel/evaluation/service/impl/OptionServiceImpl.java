@@ -36,7 +36,7 @@ public class OptionServiceImpl implements OptionService {
 
     @Override
     public Integer countRoleForPage(Long indexId) {
-        return optionRepository.countRoleForPage(indexId);
+        return optionRepository.countOptionsForPage(indexId);
     }
 
     @Override

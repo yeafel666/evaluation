@@ -20,7 +20,7 @@ public interface OptionRepository extends JpaRepository<Option,Long> {
 
     @Transactional
     @Query(value = "select count(*) from `option` where if(?1 !='',index_id=?1,1=1)",nativeQuery = true)
-    Integer countRoleForPage(Long indexId);
+    Integer countOptionsForPage(Long indexId);
 
 
     /** 分页查询某个指标的选项 .*/
